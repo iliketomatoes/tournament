@@ -12,22 +12,39 @@ def connect():
     cursor = connection.cursor()
     return [connection, cursor]
 
+
 def closeConnection(connection, cursor):
     """Close connect to the PostgreSQL database."""
     cursor.close()
-    connection.close()     
+    connection.close()
 
 
 def deleteMatches():
     """Remove all the match records from the database."""
+    connection, cursor = connect()
+    cursor.execute("DELETE FROM matches")
+    connection.commit()
+    closeConnection(connection, cursor)
+    print "Matches deleted succesfully"
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
+    connection, cursor = connect()
+    cursor.execute("DELETE FROM players")
+    connection.commit()
+    closeConnection(connection, cursor)
+    print "Players deleted succesfully"
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
+    connection, cursor = connect()
+    cursor.execute("SELECT COUNT(*) FROM players AS count")
+    count = cursor.fetchone()[0]
+    closeConnection(connection, cursor)
+    print "There are %s players registered" % (count)
+    return count
 
 
 def registerPlayer(name):
@@ -39,6 +56,20 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
+    connection, cursor = connect()
+    cursor.execute("INSERT INTO players (name) VALUES (%s)", (name,))
+    connection.commit()
+    closeConnection(connection, cursor)
+    print "Player added succesfully"
+
+
+def getPlayerID(name):
+    """Returns the player's ID given by the name."""
+    connection, cursor = connect()
+    cursor.execute("SELECT id FROM players WHERE name = %s", (name,))
+    player_id = cursor.fetchone()
+    closeConnection(connection, cursor)
+    return player_id    
 
 
 def playerStandings():
@@ -48,21 +79,36 @@ def playerStandings():
     tied for first place if there is currently a tie.
 
     Returns:
-      A list of tuples, each of which contains (id, name, wins, matches):
+      A list of tuples, each of which contains (id, name, wins, tied, matches):
         id: the player's unique id (assigned by the database)
         name: the player's full name (as registered)
         wins: the number of matches the player has won
+        tied: the number of matches the player has tied
         matches: the number of matches the player has played
     """
+    connection, cursor = connect()
+    cursor.execute("SELECT * FROM standings")
+    standings = cursor.fetchall()
+    closeConnection(connection, cursor)
+    print standings
+    return standings
 
 
-def reportMatch(winner, loser):
+def reportMatch(player_1, player_2, player_1_result, player_2_result):
     """Records the outcome of a single match between two players.
 
     Args:
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
+    connection, cursor = connect()
+    cursor.execute(
+        """INSERT INTO matches (player_1, player_2, player_1_result, player_2_result) 
+        VALUES (%s, %s, %s, %s)""", (player_1, player_2, player_1_result, player_2_result)
+    )
+    connection.commit()
+    closeConnection(connection, cursor)
+    print "Player added succesfully"
 
 
 def swissPairings():
@@ -80,3 +126,19 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    return standings    
+
+if __name__ == '__main__':
+    deletePlayers()
+    deleteMatches()
+    registerPlayer("Giancarlo Soverini")
+    registerPlayer("Leonardo Sarallo")
+    registerPlayer("Nicolo Micheletti")
+    registerPlayer("Ugo Pecchioli")
+    registerPlayer("Marco Van Basten")
+    reportMatch(getPlayerID("Giancarlo Soverini"), getPlayerID("Leonardo Sarallo"), 0.5, 0.5)
+    reportMatch(getPlayerID("Nicolo Micheletti"), getPlayerID("Ugo Pecchioli"), 1, 0)
+    reportMatch(getPlayerID("Giancarlo Soverini"), getPlayerID("Marco Van Basten"), 0.5, 0.5)
+    playerStandings()
+    countPlayers()
+    print("Done!")
