@@ -138,6 +138,7 @@ if __name__ == '__main__':
     registerPlayer("Nicolo Micheletti")
     registerPlayer("Ugo Pecchioli")
     registerPlayer("Marco Van Basten")
+    registerPlayer("Michele Pratesi")
     reportMatch(getPlayerID("Giancarlo Soverini"), getPlayerID("Leonardo Sarallo"), 0.5, 0.5)
     reportMatch(getPlayerID("Nicolo Micheletti"), getPlayerID("Ugo Pecchioli"), 1, 0)
     reportMatch(getPlayerID("Giancarlo Soverini"), getPlayerID("Marco Van Basten"), 0.5, 0.5)

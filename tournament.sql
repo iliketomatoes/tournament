@@ -42,9 +42,17 @@ CREATE VIEW standings AS
         SELECT 
         p.id, 
         p.name, 
-        m.won
+        w.won,
+        t.tied,
+        l.lost
         FROM  players AS p
         LEFT JOIN (
             SELECT player, count(*)::INTEGER as won FROM outcomes WHERE player_outcome = '1' GROUP BY player 
-            )  as m ON p.id = m.player;
+            )  as w ON p.id = w.player
+        LEFT JOIN (
+            SELECT player, count(*)::INTEGER as tied FROM outcomes WHERE player_outcome = '0.5' GROUP BY player 
+            )  as t ON p.id = t.player
+        LEFT JOIN (
+            SELECT player, count(*)::INTEGER as lost FROM outcomes WHERE player_outcome = '0' GROUP BY player 
+            )  as l ON p.id = l.player;
 
