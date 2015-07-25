@@ -60,7 +60,7 @@ def registerPlayer(name):
     cursor.execute("INSERT INTO players (name) VALUES (%s)", (name,))
     connection.commit()
     closeConnection(connection, cursor)
-    print "Player added succesfully"
+    # print "Player added succesfully"
 
 
 def getPlayerID(name):
@@ -102,13 +102,15 @@ def reportMatch(player_1, player_2, player_1_result, player_2_result):
       loser:  the id number of the player who lost
     """
     connection, cursor = connect()
-    cursor.execute(
-        """INSERT INTO matches (player_1, player_2, player_1_result, player_2_result) 
-        VALUES (%s, %s, %s, %s)""", (player_1, player_2, player_1_result, player_2_result)
-    )
+    cursor.execute("INSERT INTO matches (player_1, player_2) VALUES (%s, %s)", (player_1, player_2,))
+    cursor.execute('SELECT LASTVAL()')
+    game_id = cursor.fetchone()
+    # print game_id[0]
+    cursor.execute("INSERT INTO outcomes ( match_id, player, player_outcome) VALUES (%s, %s, %s)", (game_id, player_1, player_1_result,))
+    cursor.execute("INSERT INTO outcomes ( match_id, player, player_outcome) VALUES (%s, %s, %s)", (game_id, player_2, player_2_result,))
     connection.commit()
     closeConnection(connection, cursor)
-    print "Player added succesfully"
+    # print "Player added succesfully"
 
 
 def swissPairings():
@@ -140,5 +142,5 @@ if __name__ == '__main__':
     reportMatch(getPlayerID("Nicolo Micheletti"), getPlayerID("Ugo Pecchioli"), 1, 0)
     reportMatch(getPlayerID("Giancarlo Soverini"), getPlayerID("Marco Van Basten"), 0.5, 0.5)
     playerStandings()
-    countPlayers()
+    # countPlayers()
     print("Done!")
