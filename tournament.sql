@@ -11,8 +11,6 @@ DROP TABLE IF EXISTS players;
 DROP TABLE IF EXISTS outcomes;
 DROP TABLE IF EXISTS matches;
 
-
-
 CREATE TABLE players ( 
                         id SERIAL PRIMARY KEY,
                         name TEXT NOT NULL,
@@ -37,22 +35,40 @@ CREATE TABLE outcomes (
                         CHECK (player_outcome = 0 OR player_outcome = 1 OR player_outcome = 0.5)
                         );
 
-
 CREATE VIEW standings AS
         SELECT 
-        p.id, 
-        p.name, 
-        w.won,
-        t.tied,
-        l.lost
-        FROM  players AS p
-        LEFT JOIN (
-            SELECT player, count(*)::INTEGER as won FROM outcomes WHERE player_outcome = '1' GROUP BY player 
-            )  as w ON p.id = w.player
-        LEFT JOIN (
-            SELECT player, count(*)::INTEGER as tied FROM outcomes WHERE player_outcome = '0.5' GROUP BY player 
-            )  as t ON p.id = t.player
-        LEFT JOIN (
-            SELECT player, count(*)::INTEGER as lost FROM outcomes WHERE player_outcome = '0' GROUP BY player 
-            )  as l ON p.id = l.player;
+        players.id, 
+        players.name,
+        victories.won,
+        ties.tied,
+        games.played
+        FROM players 
+        LEFT JOIN(
+            SELECT 
+            p.id AS id,  
+            COALESCE(w.amount, 0) AS won
+            FROM  players AS p 
+            LEFT JOIN (
+                SELECT player, count(*)::INTEGER as amount FROM outcomes WHERE player_outcome = '1' GROUP BY player 
+                )  as w ON p.id = w.player
+            ) as victories on players.id = victories.id
+        LEFT JOIN(
+            SELECT 
+            p.id AS id,  
+            COALESCE(t.amount, 0) AS tied
+            FROM  players AS p 
+            LEFT JOIN (
+                SELECT player, count(*)::INTEGER as amount FROM outcomes WHERE player_outcome = '0.5' GROUP BY player 
+                )  as t ON p.id = t.player
+            ) as ties on players.id = ties.id
+        LEFT JOIN(
+            SELECT 
+            p.id AS id,  
+            COALESCE(g.amount, 0) AS played
+            FROM  players AS p 
+            LEFT JOIN (
+                SELECT player, count(*)::INTEGER as amount FROM outcomes GROUP BY player 
+                )  as g ON p.id = g.player
+            ) as games on players.id = games.id
+        ;
 

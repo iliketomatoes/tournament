@@ -38,7 +38,7 @@ def deletePlayers():
 
 
 def countPlayers():
-    """Returns the number of players currently registered."""
+    """Returns the number (long type) of players currently registered."""
     connection, cursor = connect()
     cursor.execute("SELECT COUNT(*) FROM players AS count")
     count = cursor.fetchone()[0]
@@ -79,11 +79,11 @@ def playerStandings():
     tied for first place if there is currently a tie.
 
     Returns:
-      A list of tuples, each of which contains (id, name, wins, tied, matches):
+      A list of tuples, each of which contains (id, name, wins, ties, matches):
         id: the player's unique id (assigned by the database)
         name: the player's full name (as registered)
         wins: the number of matches the player has won
-        tied: the number of matches the player has tied
+        ties: the number of matches the player has tied
         matches: the number of matches the player has played
     """
     connection, cursor = connect()
@@ -143,5 +143,5 @@ if __name__ == '__main__':
     reportMatch(getPlayerID("Nicolo Micheletti"), getPlayerID("Ugo Pecchioli"), 1, 0)
     reportMatch(getPlayerID("Giancarlo Soverini"), getPlayerID("Marco Van Basten"), 0.5, 0.5)
     playerStandings()
-    # countPlayers()
+    countPlayers()
     print("Done!")
