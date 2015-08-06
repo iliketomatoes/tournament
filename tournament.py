@@ -87,7 +87,22 @@ def playerStandings():
         matches: the number of matches the player has played
     """
     connection, cursor = connect()
-    cursor.execute("SELECT * FROM standings")
+    cursor.execute("""SELECT 
+        players.id, 
+        players.name,
+        victories.won,
+        ties.tied,
+        games_played.played
+        FROM players 
+        LEFT JOIN(
+            SELECT * FROM games_won
+            ) as victories on players.id = victories.player_id
+        LEFT JOIN(
+            SELECT * FROM games_tied
+            ) as ties on players.id = ties.player_id
+        LEFT JOIN(
+            SELECT * FROM games_played
+            ) as games_played on players.id = games_played.player_id;""")
     standings = cursor.fetchall()
     closeConnection(connection, cursor)
     print standings
