@@ -23,7 +23,8 @@ CREATE TABLE matches (
                        id SERIAL PRIMARY KEY,
 					   time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 					   player_1 INTEGER,
-					   player_2 INTEGER 
+                       -- If player_2 has id = 0, means that it's been a skipped round
+					   player_2 INTEGER DEFAULT 0
                        );
 
 CREATE TABLE outcomes ( 
