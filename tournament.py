@@ -172,9 +172,7 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-    sp_handler = Draw()
-    sp_handler.setStandings(playerStandings())
-    sp_handler.setHistory(matchesHistory())
+    sp_handler = Draw(playerStandings(), matchesHistory())
 
     return sp_handler.getPairings()
 

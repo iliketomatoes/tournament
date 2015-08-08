@@ -4,27 +4,25 @@ class Draw():
     """This class helps us make Swiss Pairings draw for
     a chess tournament"""
 
-    def __init__(self):
+    def __init__(self, standings, history):
         self.standings = []
         self.pairings = []
         self.bestScore = 0
         self.current_pair = []
         self.alreadyDrawn = []
+        self.__setStandings(standings)
+        self.__setHistory(history)
 
-    def setStandings(self, standings):
+    def __setStandings(self, standings):
         for (i, n, w, t, m) in standings:
             aggregate_standing = w + (t * 0.5)
             self.standings.append((i, n, aggregate_standing))
 
-    def setHistory(self, history):
+    def __setHistory(self, history):
         self.history = history
 
     def __alreadyByePlayed(self):
         return None
-
-    def getPairings(self):
-        self.__draw()
-        return self.pairings
 
     def __reset(self):
         self.bestScore = 0
@@ -45,3 +43,7 @@ class Draw():
                     self.__reset()
 
                 self.alreadyDrawn.append(player[0])
+
+    def getPairings(self):
+        self.__draw()
+        return self.pairings
