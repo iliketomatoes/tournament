@@ -186,6 +186,9 @@ if __name__ == '__main__':
     registerPlayer("Marco Van Basten")
     registerPlayer("Michele Pratesi")
     registerPlayer("Mario Suarez")
+    
+    # ROUND 1
+
     reportMatch(getPlayerID("Giancarlo Soverini"),
                 getPlayerID("Leonardo Sarallo"), 0.5, 0.5)
     reportMatch(
@@ -195,6 +198,8 @@ if __name__ == '__main__':
 
     # Bye round for M.S.
     reportMatch(getPlayerID("Mario Suarez"))
+
+    # ROUND 2
 
     reportMatch(getPlayerID("Marco Van Basten"),
                 getPlayerID("Leonardo Sarallo"), 0, 1)
@@ -208,6 +213,8 @@ if __name__ == '__main__':
 
     # Bye round for G.S.
     reportMatch(getPlayerID("Giancarlo Soverini"))
+
+    # ROUND 3
 
     reportMatch(
         getPlayerID("Mario Suarez"),
@@ -229,3 +236,19 @@ if __name__ == '__main__':
     print("Classifica:")
     print playerStandings()
     print("Done!")
+
+    # ROUND 4
+
+    reportMatch(
+        getPlayerID("Nicolo Micheletti"),
+        getPlayerID("Michele Pratesi"),
+        0.5, 0.5
+    )
+
+    reportMatch(getPlayerID(
+        "Giancarlo Soverini"), getPlayerID("Mario Suarez"), 0, 1)
+    reportMatch(getPlayerID("Leonardo Sarallo"),
+                getPlayerID("Ugo Pecchioli"), 0, 1)
+
+    # Bye round for N.M.
+    reportMatch(getPlayerID("Marco Van Basten"))
