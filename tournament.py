@@ -193,10 +193,39 @@ if __name__ == '__main__':
     reportMatch(getPlayerID("Michele Pratesi"), getPlayerID(
         "Marco Van Basten"), 0.5, 0.5)
 
-    # Bye round for Mario Suarez
+    # Bye round for M.S.
     reportMatch(getPlayerID("Mario Suarez"))
+
+    reportMatch(getPlayerID("Marco Van Basten"),
+                getPlayerID("Leonardo Sarallo"), 0, 1)
+    reportMatch(
+        getPlayerID("Nicolo Micheletti"),
+        getPlayerID("Mario Suarez"),
+        0.5, 0.5
+    )
+    reportMatch(getPlayerID("Michele Pratesi"), getPlayerID(
+        "Ugo Pecchioli"), 1, 0)
+
+    # Bye round for G.S.
+    reportMatch(getPlayerID("Giancarlo Soverini"))
+
+    reportMatch(
+        getPlayerID("Mario Suarez"),
+        getPlayerID("Leonardo Sarallo"),
+        0.5, 0.5
+    )
+
+    reportMatch(getPlayerID(
+        "Giancarlo Soverini"), getPlayerID("Michele Pratesi"), 0, 1)
+    reportMatch(getPlayerID("Marco Van Basten"),
+                getPlayerID("Ugo Pecchioli"), 0, 1)
+
+    # Bye round for N.M.
+    reportMatch(getPlayerID("Nicolo Micheletti"))
 
     countPlayers()
     print("Sorteggio:")
     print swissPairings()
+    print("Classifica:")
+    print playerStandings()
     print("Done!")
