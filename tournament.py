@@ -27,7 +27,6 @@ def deleteMatches():
     cursor.execute("DELETE FROM matches")
     connection.commit()
     closeConnection(connection, cursor)
-    print "Matches deleted succesfully"
 
 
 def deletePlayers():
@@ -36,7 +35,6 @@ def deletePlayers():
     cursor.execute("DELETE FROM players")
     connection.commit()
     closeConnection(connection, cursor)
-    print "Players deleted succesfully"
 
 
 def countPlayers():
@@ -45,7 +43,6 @@ def countPlayers():
     cursor.execute("SELECT COUNT(*) FROM players AS count")
     count = cursor.fetchone()[0]
     closeConnection(connection, cursor)
-    print "There are %s players registered" % (count)
     return count
 
 
@@ -175,80 +172,3 @@ def swissPairings():
     sp_handler = Draw(playerStandings(), matchesHistory())
 
     return sp_handler.getPairings()
-
-if __name__ == '__main__':
-    deletePlayers()
-    deleteMatches()
-    registerPlayer("Giancarlo Soverini")
-    registerPlayer("Leonardo Sarallo")
-    registerPlayer("Nicolo Micheletti")
-    registerPlayer("Ugo Pecchioli")
-    registerPlayer("Marco Van Basten")
-    registerPlayer("Michele Pratesi")
-    registerPlayer("Mario Suarez")
-    
-    # ROUND 1
-
-    reportMatch(getPlayerID("Giancarlo Soverini"),
-                getPlayerID("Leonardo Sarallo"), 0.5, 0.5)
-    reportMatch(
-        getPlayerID("Nicolo Micheletti"), getPlayerID("Ugo Pecchioli"), 1, 0)
-    reportMatch(getPlayerID("Michele Pratesi"), getPlayerID(
-        "Marco Van Basten"), 0.5, 0.5)
-
-    # Bye round for M.S.
-    reportMatch(getPlayerID("Mario Suarez"))
-
-    # ROUND 2
-
-    reportMatch(getPlayerID("Marco Van Basten"),
-                getPlayerID("Leonardo Sarallo"), 0, 1)
-    reportMatch(
-        getPlayerID("Nicolo Micheletti"),
-        getPlayerID("Mario Suarez"),
-        0.5, 0.5
-    )
-    reportMatch(getPlayerID("Michele Pratesi"), getPlayerID(
-        "Ugo Pecchioli"), 1, 0)
-
-    # Bye round for G.S.
-    reportMatch(getPlayerID("Giancarlo Soverini"))
-
-    # ROUND 3
-
-    reportMatch(
-        getPlayerID("Mario Suarez"),
-        getPlayerID("Leonardo Sarallo"),
-        0.5, 0.5
-    )
-
-    reportMatch(getPlayerID(
-        "Giancarlo Soverini"), getPlayerID("Michele Pratesi"), 0, 1)
-    reportMatch(getPlayerID("Marco Van Basten"),
-                getPlayerID("Ugo Pecchioli"), 0, 1)
-
-    # Bye round for N.M.
-    reportMatch(getPlayerID("Nicolo Micheletti"))
-
-    countPlayers()
-    print("Sorteggio:")
-    print swissPairings()
-    print("Classifica:")
-    print playerStandings()
-    print("Done!")
-
-    # ROUND 4
-
-    reportMatch(
-        getPlayerID("Nicolo Micheletti"),
-        getPlayerID("Michele Pratesi"),
-        0.5, 0.5
-    )
-
-    reportMatch(getPlayerID(
-        "Giancarlo Soverini"), getPlayerID("Mario Suarez"), 0, 1)
-    reportMatch(getPlayerID("Leonardo Sarallo"),
-                getPlayerID("Ugo Pecchioli"), 0, 1)
-
-    # Bye round for N.M.
-    reportMatch(getPlayerID("Marco Van Basten"))

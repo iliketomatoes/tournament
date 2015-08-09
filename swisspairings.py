@@ -130,10 +130,6 @@ class Draw():
     def __draw(self):
 
         if(self.totalRounds == self.roundsPlayed):
-            print "The tournament is over"
-            print "Total rounds played %s" % self.roundsPlayed
-            print "Ranking:"
-            print self.standings
             return False
 
         for player in self.standings:

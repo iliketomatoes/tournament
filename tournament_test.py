@@ -2,7 +2,42 @@
 #
 # Test cases for tournament.py
 
+import random
+import math
 from tournament import *
+
+
+class TournamentSimulation():
+
+    def __init__(self, players_list):
+        self.possibleOutcomes = [
+            [1, 0],
+            [0.5, 0.5],
+            [0, 1]
+        ]
+        deletePlayers()
+        deleteMatches()
+        random.shuffle(players_list)
+        for player in players_list:
+            registerPlayer(player)
+
+    def execute(self):
+
+        pairings = swissPairings()
+
+        if len(pairings):
+            for pair in pairings:
+                # Check if it was a Bye round
+                # In that case player 1 wins
+                if(pair[2] == 0 or pair[2] == None):
+                    reportMatch(pair[0])
+                else:
+                    outcome = random.choice(self.possibleOutcomes)
+                    reportMatch(pair[0], pair[2], outcome[0], outcome[1])
+            self.execute()
+        else:
+            return False
+
 
 def testDeleteMatches():
     deleteMatches()
@@ -63,20 +98,21 @@ def testStandingsBeforeMatches():
     registerPlayer("Randy Schwartz")
     standings = playerStandings()
     if len(standings) < 2:
-        raise ValueError("Players should appear in playerStandings even before "
+        raise ValueError("Players should appear in playerStandings even before "  # noqa
                          "they have played any matches.")
     elif len(standings) > 2:
         raise ValueError("Only registered players should appear in standings.")
     if len(standings[0]) != 5:
         raise ValueError("Each playerStandings row should have five columns.")
-    [(id1, name1, wins1, ties1, matches1), (id2, name2, wins2, ties2, matches2)] = standings
+    [(id1, name1, wins1, ties1, matches1),
+     (id2, name2, wins2, ties2, matches2)] = standings
     if matches1 != 0 or matches2 != 0 or wins1 != 0 or wins2 != 0:
         raise ValueError(
             "Newly registered players should have no matches or wins.")
     if set([name1, name2]) != set(["Melpomene Murray", "Randy Schwartz"]):
-        raise ValueError("Registered players' names should appear in standings, "
+        raise ValueError("Registered players' names should appear in standings, "  # noqa
                          "even if they have no matches played.")
-    print "6. Newly registered players appear in the standings with no matches."
+    print "6. Newly registered players appear in the standings with no matches."  # noqa
 
 
 def testReportMatches():
@@ -88,7 +124,7 @@ def testReportMatches():
     registerPlayer("Diane Grant")
     standings = playerStandings()
     [id1, id2, id3, id4] = [row[0] for row in standings]
-    reportMatch(id1, id2 , 1, 0)
+    reportMatch(id1, id2, 1, 0)
     reportMatch(id3, id4, 1, 0)
     standings = playerStandings()
     for (i, n, w, t, m) in standings:
@@ -97,7 +133,8 @@ def testReportMatches():
         if i in (id1, id3) and w != 1:
             raise ValueError("Each match winner should have one win recorded.")
         elif i in (id2, id4) and w != 0:
-            raise ValueError("Each match loser should have zero wins recorded.")
+            raise ValueError(
+                "Each match loser should have zero wins recorded.")
     print "7. After a match, players have updated standings."
 
 
@@ -125,6 +162,99 @@ def testPairings():
     print "8. After one match, players with one win are paired."
 
 
+def testOddPlayersTournament():
+    # 9 players
+    players = [
+        "Giancarlo Soverini",
+        "Leonardo Sarallo",
+        "Nicolo Micheletti",
+        "Ugo Pecchioli",
+        "Marco Van Basten",
+        "Michele Pratesi",
+        "Mario Suarez",
+        "Superman",
+        "Donald Trump"
+    ]
+
+    simulation = TournamentSimulation(players)
+    simulation.execute()
+    standings = playerStandings()
+    rounds_played = standings[0][4]
+
+    match_history = matchesHistory()
+
+    print "ODD TOURNAMENT SIMULATION"
+    print "Rounds played: ", rounds_played
+    print "Standings: ", playerStandings()
+
+    for (p_id, name, won, tied, played) in standings:
+        matches = []
+        for (id_1, id_2) in match_history:
+            if(id_1 == p_id or id_2 == p_id):
+                match = frozenset([id_1, id_2])
+                matches.append(match)
+        if len(matches) != len(set(matches)):
+            raise ValueError("ODD TOURNAMENT: Some players have either re-matched or have more than one Bye-round")  # noqa
+
+    print """9. ODD TOURNAMENT:
+    There are no rematches among players,
+    nor players with multiple Bye-rounds"""
+
+    if(rounds_played >= math.log((countPlayers()), 2)):
+        print """10. ODD TOURNAMENT:
+        Number of rounds played is equal
+        or greater than log2(n_of_players)"""
+    else:
+        raise ValueError(
+            "ODD TOURNAMENT: Number of rounds to be played must be equal or greater than log2(n_of_players)")  # noqa
+
+
+def testEvenPlayersTournament():
+    # 8 players
+    players = [
+        "Giancarlo Soverini",
+        "Leonardo Sarallo",
+        "Nicolo Micheletti",
+        "Ugo Pecchioli",
+        "Marco Van Basten",
+        "Michele Pratesi",
+        "Mario Suarez",
+        "Superman"
+    ]
+
+    simulation = TournamentSimulation(players)
+    simulation.execute()
+    standings = playerStandings()
+    rounds_played = standings[0][4]
+
+    match_history = matchesHistory()
+
+    print "EVEN TOURNAMENT SIMULATION"
+    print "Rounds played: ", rounds_played
+    print "Standings: ", playerStandings()
+
+    for (p_id, name, won, tied, played) in standings:
+        matches = []
+        for (id_1, id_2) in match_history:
+            if(id_1 == p_id or id_2 == p_id):
+                match = frozenset([id_1, id_2])
+                matches.append(match)
+        if len(matches) != len(set(matches)):
+            raise ValueError("EVEN TOURNAMENT: Some players have either re-matched or have more than one Bye-round")  # noqa
+
+    print """11. EVEN TOURNAMENT:
+    There are no rematches among players,
+    nor players with multiple Bye-rounds"""
+
+    if(rounds_played >= math.log((countPlayers()), 2)):
+        print """12. EVEN TOURNAMENT:
+        Number of rounds played is equal
+        or greater than log2(n_of_players)"""
+    else:
+        raise ValueError(
+            "EVEN TOURNAMENT: Number of rounds to be played must be equal or greater than log2(n_of_players)")  # noqa
+
+
 if __name__ == '__main__':
     testDeleteMatches()
     testDelete()
@@ -134,6 +264,6 @@ if __name__ == '__main__':
     testStandingsBeforeMatches()
     testReportMatches()
     testPairings()
+    testOddPlayersTournament()
+    testEvenPlayersTournament()
     print "Success!  All tests pass!"
-
-
