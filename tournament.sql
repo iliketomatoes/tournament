@@ -14,9 +14,10 @@ DROP TABLE IF EXISTS outcomes;
 DROP TABLE IF EXISTS matches;
 
 CREATE TABLE players ( 
-                        id SERIAL PRIMARY KEY,
+                        id SERIAL,
                         name TEXT NOT NULL,
-                        registration_date DATE DEFAULT CURRENT_DATE
+                        registration_date DATE DEFAULT CURRENT_DATE,
+                        PRIMARY KEY (id, name)
                         );
 
 CREATE TABLE matches ( 
@@ -59,11 +60,11 @@ CREATE VIEW games_tied AS
 
 CREATE VIEW games_played AS
         SELECT 
-            p.id AS player_id,  
-            COALESCE(g.amount, 0) AS played
-            FROM  players AS p 
-            LEFT JOIN (
-                SELECT player, count(*)::INTEGER as amount FROM outcomes GROUP BY player 
-                ) as g ON p.id = g.player;                          
+        p.id AS player_id,  
+        COALESCE(g.amount, 0) AS played
+        FROM  players AS p 
+        LEFT JOIN (
+            SELECT player, count(*)::INTEGER as amount FROM outcomes GROUP BY player 
+            ) as g ON p.id = g.player;                          
 
 
