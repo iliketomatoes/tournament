@@ -16,9 +16,9 @@ class Draw():
         self.current_pair = []
         self.alreadyDrawn = []
         self.numberOfPlayers = len(standings)
-        self.totalRounds = math.log(len(standings), 2) if (len(
-            standings) % 2 == 0) else math.log(len(standings) + 1, 2)
         self.roundsPlayed = standings[0][4]
+        self.totalRounds = 0
+        self.__setTotalRounds(self.numberOfPlayers)
         self.__setStandings(standings)
 
         # Store matches history inside a list of tuples (Id_1, Id_2)
@@ -30,6 +30,15 @@ class Draw():
         for (i, n, w, t, m) in standings:
             aggregate_standing = (w * 3) + t
             self.standings.append((i, n, aggregate_standing))
+
+    def __setTotalRounds(self, n_of_players, add=0):
+
+        rounds = math.log((n_of_players + add), 2)
+
+        if(rounds.is_integer()):
+            self.totalRounds = rounds
+        else:
+            self.__setTotalRounds(n_of_players, (add + 1))
 
     def __getPlayersWithByeRound(self):
         players_with_bye_round = []
@@ -83,7 +92,7 @@ class Draw():
 
         for i, (pair) in enumerate(self.pairings):
 
-            if(abs(idStanding[pair[0]] - idStanding[player[0]]) < delta):
+            if(abs(idStanding[pair[0]] - idStanding[player[0]]) <= delta):
 
                 if(not self.__alreadyMatchedCheck(pair[0], player[0]) and pair[2] not in self.alreadyBye):  # noqa
                     element_to_be_swapped = (pair[2], pair[3])
@@ -96,7 +105,7 @@ class Draw():
                     found_swap = True
                     break
 
-            if(abs(idStanding[pair[2]] - idStanding[player[0]]) < delta):
+            if(abs(idStanding[pair[2]] - idStanding[player[0]]) <= delta):
 
                 if(not self.__alreadyMatchedCheck(pair[2], player[0]) and pair[0] not in self.alreadyBye):  # noqa
                     element_to_be_swapped = (pair[0], pair[1])
@@ -123,13 +132,11 @@ class Draw():
         if(self.totalRounds == self.roundsPlayed):
             print "The tournament is over"
             print "Total rounds played %s" % self.roundsPlayed
-            print "%s is the winner" % self.standings[0][1]
             print "Ranking:"
             print self.standings
             return False
 
         for player in self.standings:
-            print "Drawing %s" % player[1]
             # If the player hasn't been drawn already
             if (player[0] not in self.alreadyDrawn):  # noqa
 
