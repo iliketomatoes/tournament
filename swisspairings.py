@@ -198,7 +198,7 @@ class Draw():
                     break
 
         # Append the bye round for element_to_be_swapped
-        if(element_to_be_swapped != None and found_swap):
+        if(element_to_be_swapped is not None and found_swap):
             self.pairings.append(
                 element_to_be_swapped + (0, None)
             )
