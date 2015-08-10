@@ -118,8 +118,10 @@ def reportMatch(player_1, player_2=0, player_1_result=1, player_2_result=0):
     when only the first player ID is passed.
 
     Args:
-      winner:  the id number of the player who won
-      loser:  the id number of the player who lost
+      player_1:  the id number of the first player
+      player_2:  the id number of the second player
+      player_1_result: player_1 outcome
+      player_2_result: player_2 outcome
     """
     connection, cursor = connect()
     cursor.execute(
@@ -134,18 +136,21 @@ def reportMatch(player_1, player_2=0, player_1_result=1, player_2_result=0):
         (game_id, player_1, player_1_result,)
     )
 
-    # if it's not a Bye round
+    # if it's not a Bye-round we insert the second
+    # player outcome
     if player_2 != 0:
         cursor.execute(
             "INSERT INTO outcomes ( match_id, player, player_outcome) VALUES (%s, %s, %s)",  # noqa
             (game_id, player_2, player_2_result,)
         )
+
     connection.commit()
     closeConnection(connection, cursor)
 
 
 def matchesHistory():
-
+    """Returns a list of tuples containing the players' id
+    for each match played"""
     connection, cursor = connect()
     cursor.execute("SELECT player_1, player_2 FROM matches")
     history = cursor.fetchall()

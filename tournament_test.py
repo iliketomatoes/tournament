@@ -9,6 +9,8 @@ from tournament import *
 
 class TournamentSimulation():
 
+    """Helper class to set up and simulate a Swiss System chess tournament."""
+
     def __init__(self, players_list):
         self.possibleOutcomes = [
             [1, 0],
