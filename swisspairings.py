@@ -11,7 +11,7 @@ class Draw():
     a Swiss-system chess tournament."""
 
     def __init__(self, standings, history):
-        self.standings = []
+        self.standings = standings
         self.pairings = []
 
         # Helper list for holding the current
@@ -26,26 +26,28 @@ class Draw():
         self.totalRounds = 0
 
         self.__setTotalRounds(self.numberOfPlayers)
-        self.__setStandings(standings)
+        # self.__setStandings(standings)
 
         # Store matches history inside a list of tuples (Id_1, Id_2).
         self.history = history
         # Store IDs for players who have already had a bye round.
         self.alreadyBye = self.__getPlayersWithByeRound()
 
-    def __setStandings(self, standings):
-        """Create an alternative ranking for later computations.
+    def __getTotalScore(self, player):
+        """Get the aggregate ranking of the current player.
         Each victory gives 3 points.
         Each tie gives 1 point.
-        Total points are then added toghether for each player.
+        Total points are then added toghether.
 
         Args:
-          standings: a list of tuples like
-          (id, name, victories, ties, matches).
+          player: a tuple containing
+          (id, name, victories, ties, matches)
+
+        Returns:
+          An integer representing the total score.
         """
-        for (i, n, w, t, m) in standings:
-            aggregate_standing = (w * 3) + t
-            self.standings.append((i, n, aggregate_standing))
+        (i, n, w, t, m) = player
+        return (w * 3) + t
 
     def __setTotalRounds(self, n_of_players, add=0):
         """Find the exact number of rounds that must be played
@@ -56,6 +58,10 @@ class Draw():
           add: the positive integer to be added to n_of_players in order
             to make that amount an exact power of two.
         """
+        if n_of_players <= 1:
+            self.totalRounds = 0
+            return
+
         rounds = math.log((n_of_players + add), 2)
 
         if(rounds.is_integer()):
@@ -167,8 +173,8 @@ class Draw():
           player: the player ID that has to be paired with a physical player.
           delta: the desired ranking gap for making the new pair.
         """
-
-        idStanding = {p[0]: p[2] for p in self.standings}
+        # In this
+        idStanding = {p[0]: self.__getTotalScore(p) for p in self.standings}
 
         found_swap = False
         element_to_be_swapped = None
