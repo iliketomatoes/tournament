@@ -56,6 +56,10 @@ class Draw():
           add: the positive integer to be added to n_of_players in order
             to make that amount an exact power of two.
         """
+        if n_of_players <= 1:
+            self.totalRounds = 0
+            return
+
         rounds = math.log((n_of_players + add), 2)
 
         if(rounds.is_integer()):
