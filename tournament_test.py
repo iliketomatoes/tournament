@@ -185,6 +185,7 @@ def testOddPlayersTournament():
 
     match_history = matchesHistory()
 
+    print "\n"
     print "ODD TOURNAMENT SIMULATION"
     print "Rounds played: ", rounds_played
     print "Standings: ", playerStandings()
@@ -196,19 +197,15 @@ def testOddPlayersTournament():
                 match = frozenset([id_1, id_2])
                 matches.append(match)
         if len(matches) != len(set(matches)):
-            raise ValueError("ODD TOURNAMENT: Some players have either re-matched or have more than one Bye-round")  # noqa
+            raise ValueError("Some players have either re-matched or have more than one Bye-round")  # noqa
 
-    print """9. ODD TOURNAMENT:
-    There are no rematches among players,
-    nor players with multiple Bye-rounds"""
+    print """9.There are no rematches among players, nor players with multiple Bye-rounds"""  # noqa
 
     if(rounds_played >= math.log((countPlayers()), 2)):
-        print """10. ODD TOURNAMENT:
-        Number of rounds played is equal
-        or greater than log2(n_of_players)"""
+        print """10.Number of rounds played is equal or greater than log2(n_of_players)"""  # noqa
     else:
         raise ValueError(
-            "ODD TOURNAMENT: Number of rounds to be played must be equal or greater than log2(n_of_players)")  # noqa
+            " Number of rounds to be played must be equal or greater than log2(n_of_players)")  # noqa
 
 
 def testEvenPlayersTournament():
@@ -231,6 +228,7 @@ def testEvenPlayersTournament():
 
     match_history = matchesHistory()
 
+    print "\n"
     print "EVEN TOURNAMENT SIMULATION"
     print "Rounds played: ", rounds_played
     print "Standings: ", playerStandings()
@@ -242,19 +240,15 @@ def testEvenPlayersTournament():
                 match = frozenset([id_1, id_2])
                 matches.append(match)
         if len(matches) != len(set(matches)):
-            raise ValueError("EVEN TOURNAMENT: Some players have either re-matched or have more than one Bye-round")  # noqa
+            raise ValueError("Some players have either re-matched or have more than one Bye-round")  # noqa
 
-    print """11. EVEN TOURNAMENT:
-    There are no rematches among players,
-    nor players with multiple Bye-rounds"""
+    print """11. There are no rematches among players, nor players with multiple Bye-rounds"""  # noqa
 
     if(rounds_played >= math.log((countPlayers()), 2)):
-        print """12. EVEN TOURNAMENT:
-        Number of rounds played is equal
-        or greater than log2(n_of_players)"""
+        print """12. Number of rounds played is equal or greater than log2(n_of_players)"""  # noqa
     else:
         raise ValueError(
-            "EVEN TOURNAMENT: Number of rounds to be played must be equal or greater than log2(n_of_players)")  # noqa
+            "Number of rounds to be played must be equal or greater than log2(n_of_players)")  # noqa
 
 
 if __name__ == '__main__':
@@ -268,4 +262,5 @@ if __name__ == '__main__':
     testPairings()
     testOddPlayersTournament()
     testEvenPlayersTournament()
+    print "\n"
     print "Success!  All tests pass!"

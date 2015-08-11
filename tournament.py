@@ -162,7 +162,7 @@ def matchesHistory():
     history = cursor.fetchall()
     closeConnection(connection, cursor)
 
-    return history    
+    return history
 
 
 def swissPairings():
