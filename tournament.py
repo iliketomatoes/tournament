@@ -149,14 +149,20 @@ def reportMatch(player_1, player_2=0, player_1_result=1, player_2_result=0):
 
 
 def matchesHistory():
-    """Returns a list of tuples containing the players' id
-    for each match played"""
+    """Helper function used inside swissPairings().
+    Get the matches that have already been played.
+
+    Returns:
+      A list of tuples, each of which contains (id1, id2)
+      id1: the first player's unique id
+      id2: the second player's unique id"""
+
     connection, cursor = connect()
     cursor.execute("SELECT player_1, player_2 FROM matches")
     history = cursor.fetchall()
     closeConnection(connection, cursor)
 
-    return history
+    return history    
 
 
 def swissPairings():

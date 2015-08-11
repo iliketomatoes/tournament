@@ -114,6 +114,10 @@ class Draw():
         """Look for players that hasn't been drawn yet and that are
         matchable (i.e. haven't already played against the current player).
 
+        Args:
+          id_1: current player that we are trying to match
+          with some other player.
+
         Returns:
           A list of integers containing potentially-valid-opponent IDs.
         """
